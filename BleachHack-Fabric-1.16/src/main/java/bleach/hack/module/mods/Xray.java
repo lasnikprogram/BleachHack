@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@ import org.lwjgl.glfw.GLFW;
 
 import com.google.common.eventbus.Subscribe;
 
-import bleach.hack.event.events.EventBlockRender;
 import bleach.hack.event.events.EventTick;
 import bleach.hack.module.Category;
 import bleach.hack.module.Module;
@@ -76,13 +75,6 @@ public class Xray extends Module {
 		mc.worldRenderer.reload();
 
 		super.onDisable();
-	}
-
-	@Subscribe
-	public void blockRender(EventBlockRender eventBlockRender) {
-		if (isVisible(eventBlockRender.getBlockState().getBlock())) {
-			eventBlockRender.setCancelled(true);
-		}
 	}
 
 	@Subscribe

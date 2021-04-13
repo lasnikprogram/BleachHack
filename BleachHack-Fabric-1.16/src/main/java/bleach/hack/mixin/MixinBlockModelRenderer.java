@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,8 +42,7 @@ public class MixinBlockModelRenderer {
 	@Inject(method = "renderQuad", at = @At("HEAD"), cancellable = true)
 	private void renderQuad(BlockRenderView world, BlockState state, BlockPos pos, VertexConsumer vertexConsumer, MatrixStack.Entry matrixEntry, BakedQuad quad,
 			float brightness0, float brightness1, float brightness2, float brightness3, int light0, int light1, int light2, int light3, int overlay, CallbackInfo ci) {
-		Xray xray = ModuleManager.getModule(Xray.class);
-		if (!xray.isVisible(state.getBlock())) {
+		if (!((Xray) ModuleManager.getModule("Xray")).isVisible(state.getBlock())) {
 			ci.cancel();
 		}
 	}

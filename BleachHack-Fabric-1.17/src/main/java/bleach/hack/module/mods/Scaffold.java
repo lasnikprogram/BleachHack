@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -155,7 +155,7 @@ public class Scaffold extends Module {
 			boolean placed = WorldUtils.placeBlock(bp, slot, getSetting(3).asRotate(), getSetting(4).asToggle().state, !getSetting(9).asToggle().state);
 			
 			if (!placed && getSetting(7).asToggle().state) {
-				WorldUtils.airPlaceBlock(bp, slot, getSetting(3).asRotate(), getSetting(4).asToggle().state, !getSetting(9).asToggle().state);
+				placed = WorldUtils.airPlaceBlock(bp, slot, getSetting(3).asRotate(), getSetting(4).asToggle().state, !getSetting(9).asToggle().state);
 			}
 
 			if (placed) {
@@ -175,7 +175,7 @@ public class Scaffold extends Module {
 		if (getSetting(11).asToggle().state) {
 			float[] col = getSetting(11).asToggle().getChild(0).asColor().getRGBFloat();
 			for (BlockPos bp : renderBlocks) {
-				RenderUtils.drawFilledBox(bp, col[0], col[1], col[2], 0.7f);
+				RenderUtils.drawFilledBox(bp, col[0], col[1], col[2], 0.5f);
 
 				col[0] = Math.max(0f, col[0] - 0.01f);
 				col[2] = Math.min(1f, col[2] + 0.01f);

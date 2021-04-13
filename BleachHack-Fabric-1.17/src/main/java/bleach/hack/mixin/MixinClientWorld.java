@@ -37,8 +37,7 @@ public class MixinClientWorld {
 			}
 
 			BleachQueue.nextQueue();
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 
 		EventTick event = new EventTick();
 		BleachHack.eventBus.post(event);

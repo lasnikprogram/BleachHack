@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import bleach.hack.module.Module;
 import bleach.hack.module.ModuleManager;
-import bleach.hack.module.mods.SpeedMine;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
@@ -32,9 +31,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
 	@Inject(method = "getBlockBreakingSpeed", at = @At("HEAD"), cancellable = true)
 	public void getBlockBreakingSpeed(BlockState block, CallbackInfoReturnable<Float> ci) {
-		Module mod = ModuleManager.getModule(SpeedMine.class);
+		Module speedMine = ModuleManager.getModule("Speedmine");
 
-		if (mod.isEnabled()) {
+		if (speedMine.isEnabled()) {
 			float breakingSpeed = inventory.getBlockBreakingSpeed(block);
 			if (breakingSpeed > 1.0F) {
 				int eff = EnchantmentHelper.getEfficiency(this);
@@ -48,7 +47,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 				breakingSpeed *= 1.0F + (StatusEffectUtil.getHasteAmplifier(this) + 1) * 0.2F;
 			}
 
-			if (!mod.getSetting(4).asToggle().state) {
+			if (!speedMine.getSetting(4).asToggle().state) {
 				if (this.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
 					float fatigueMult;
 					switch (this.getStatusEffect(StatusEffects.MINING_FATIGUE).getAmplifier()) {
@@ -70,7 +69,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 				}
 			}
 
-			if (!mod.getSetting(5).asToggle().state) {
+			if (!speedMine.getSetting(5).asToggle().state) {
 				if (this.isSubmergedIn(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(this)) {
 					breakingSpeed /= 5.0F;
 				}
@@ -80,8 +79,8 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 				}
 			}
 
-			if (mod.getSetting(0).asMode().mode == 1)
-				breakingSpeed *= (float) mod.getSetting(3).asSlider().getValue();
+			if (speedMine.getSetting(0).asMode().mode == 1)
+				breakingSpeed *= (float) speedMine.getSetting(3).asSlider().getValue();
 
 			ci.setReturnValue(breakingSpeed);
 		}

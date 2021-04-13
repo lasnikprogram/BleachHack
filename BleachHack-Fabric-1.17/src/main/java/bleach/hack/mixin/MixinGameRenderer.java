@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import bleach.hack.BleachHack;
 import bleach.hack.event.events.EventRenderShader;
 import bleach.hack.module.ModuleManager;
-import bleach.hack.module.mods.NoRender;
 import net.minecraft.client.gl.ShaderEffect;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -44,14 +43,14 @@ public class MixinGameRenderer {
 
 	@Inject(method = "bobViewWhenHurt", at = @At("HEAD"), cancellable = true)
 	private void onBobViewWhenHurt(MatrixStack matrixStack, float f, CallbackInfo ci) {
-		if (ModuleManager.getModule(NoRender.class).isEnabled() && ModuleManager.getModule(NoRender.class).getSetting(2).asToggle().state) {
+		if (ModuleManager.getModule("NoRender").isEnabled() && ModuleManager.getModule("NoRender").getSetting(2).asToggle().state) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(method = "showFloatingItem", at = @At("HEAD"), cancellable = true)
 	private void showFloatingItem(ItemStack floatingItem, CallbackInfo ci) {
-		if (ModuleManager.getModule(NoRender.class).isEnabled() && ModuleManager.getModule(NoRender.class).getSetting(8).asToggle().state
+		if (ModuleManager.getModule("NoRender").isEnabled() && ModuleManager.getModule("NoRender").getSetting(8).asToggle().state
 				&& floatingItem.getItem() == Items.TOTEM_OF_UNDYING) {
 			ci.cancel();
 		}
@@ -60,7 +59,7 @@ public class MixinGameRenderer {
 	@Redirect(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerp(FFF)F", ordinal = 0),
 			require = 0 /* TODO: meteor */)
 	private float nauseaWobble(float delta, float first, float second) {
-		if (!(ModuleManager.getModule(NoRender.class).isEnabled() && ModuleManager.getModule(NoRender.class).getSetting(6).asToggle().state)) {
+		if (!(ModuleManager.getModule("NoRender").isEnabled() && ModuleManager.getModule("NoRender").getSetting(6).asToggle().state)) {
 			return MathHelper.lerp(delta, first, second);
 		}
 

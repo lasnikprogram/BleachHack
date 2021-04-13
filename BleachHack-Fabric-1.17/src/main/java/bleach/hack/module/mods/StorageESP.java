@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -158,7 +158,7 @@ public class StorageESP extends Module {
 					if (dir != null) {
 						box = box.expand(Math.abs(dir.getOffsetX()) / 2d, 0, Math.abs(dir.getOffsetZ()) / 2d);
 						box = box.offset(dir.getOffsetX() / 2d, 0, dir.getOffsetZ() / 2d);
-						blacklist.add(e.getKey().getPos().method_35851(dir));
+						blacklist.add(e.getKey().getPos().offset(dir));
 					}
 				}
 

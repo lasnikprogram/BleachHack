@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,19 +28,50 @@ import bleach.hack.util.FriendManager;
 import bleach.hack.util.file.BleachFileHelper;
 import bleach.hack.util.file.BleachFileMang;
 import net.fabricmc.api.ModInitializer;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BleachHack implements ModInitializer {
 
-	public static final String VERSION = "0.15.2";
-	public static final int INTVERSION = 27;
+	private static BleachHack instance = null;
+	public static Logger logger;
+
+	public static final String VERSION = "0.15.3";
+	public static final int INTVERSION = 28;
 
 	public static final EventBus eventBus = new EventBus();
 
 	public static FriendManager friendMang;
 
+	//private BleachFileMang bleachFileManager;
+
+	public static BleachHack getInstance() {
+		return instance;
+	}
+
+	public BleachHack() {
+		if (instance != null) {
+			throw new RuntimeException("A BleachHack instance already exists.");
+		}
+	}
+
 	@Override
 	public void onInitialize() {
+		long initStartTime = System.currentTimeMillis();
+
+		if (instance != null) {
+			throw new RuntimeException("BleachHack has already been initialized.");
+		}
+
+		instance = this;
+		logger = LogManager.getFormatterLogger("BleachHack");
+
+		//TODO base-rewrite
+		//this.eventBus = new EventBus();
+		//this.bleachFileManager = new BleachFileMang();
 		BleachFileMang.init();
+		ModuleManager.loadModules(this.getClass().getClassLoader().getResourceAsStream("bleachhack.modules.json"));
 		BleachFileHelper.readModules();
 
 		ClickGui.clickGui.initWindows();
@@ -49,16 +80,11 @@ public class BleachHack implements ModInitializer {
 
 		CommandManager.readPrefix();
 
-		// v This makes a scat fetishist look like housekeeping.
-		eventBus.register(new ModuleManager());
-		// wait why do we need this ^?
-		// Because I was too lazy to implement a proper keybind system and I left the
-		// keypress handler in ModuleManager as a subscribed event. TODO: Proper Keybind
-		// System
-
 		JsonElement mainMenu = BleachFileHelper.readMiscSetting("customTitleScreen");
 		if (mainMenu != null && !mainMenu.getAsBoolean()) {
 			BleachTitleScreen.customTitleScreen = false;
 		}
+
+		logger.log(Level.INFO, "Loaded BleachHack in %d ms.", System.currentTimeMillis() - initStartTime);
 	}
 }

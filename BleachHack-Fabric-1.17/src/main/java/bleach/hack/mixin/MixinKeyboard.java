@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,7 @@
  */
 package bleach.hack.mixin;
 
+import bleach.hack.module.ModuleManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,11 +38,15 @@ public class MixinKeyboard {
 			 ChatScreen(CommandManager.prefix));
 		 }*/
 
+		ModuleManager.handleKeyPress(key);
+
 		if (key != -1) {
 			EventKeyPress event = new EventKeyPress(key, scanCode);
 			BleachHack.eventBus.post(event);
-			if (event.isCancelled())
+
+			if (event.isCancelled()) {
 				callbackInfo.cancel();
+			}
 		}
 	}
 }

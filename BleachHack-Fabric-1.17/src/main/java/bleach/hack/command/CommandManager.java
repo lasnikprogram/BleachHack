@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import bleach.hack.util.BleachLogger;
 import bleach.hack.util.file.BleachFileHelper;
 
 public class CommandManager {
-	
+
 	public static boolean allowNextMsg = false;
 
 	private static List<Command> commands = Arrays.asList(
@@ -39,6 +39,7 @@ public class CommandManager {
 			new CmdCustomSign(),
 			new CmdDupe(),
 			new CmdEnchant(),
+			new CmdEntityMenu(),
 			new CmdEntityStats(),
 			new CmdFriends(),
 			new CmdGamemode(),
@@ -61,11 +62,13 @@ public class CommandManager {
 	public static List<Command> getCommands() {
 		return commands;
 	}
-	
+
 	public static void readPrefix() {
 		JsonElement prefix = BleachFileHelper.readMiscSetting("prefix");
-		if (prefix != null)
+
+		if (prefix != null) {
 			Command.PREFIX = prefix.getAsString();
+		}
 	}
 
 	public static void callCommand(String input) {

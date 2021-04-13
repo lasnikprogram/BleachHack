@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,15 +24,20 @@ import com.google.common.eventbus.Subscribe;
 import bleach.hack.event.events.EventClientMove;
 import bleach.hack.event.events.EventSendPacket;
 import bleach.hack.event.events.EventTick;
+import bleach.hack.event.events.EventWorldRender;
 import bleach.hack.module.Category;
 import bleach.hack.module.Module;
 import bleach.hack.setting.base.SettingToggle;
 import bleach.hack.util.world.WorldUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.JigsawBlockScreen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.gui.screen.ingame.StructureBlockScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.effect.StatusEffects;
@@ -47,6 +52,7 @@ import net.minecraft.util.math.Vec3d;
 public class NoSlow extends Module {
 
 	private Vec3d addVelocity = Vec3d.ZERO;
+	private long lastTime;
 
 	public NoSlow() {
 		super("NoSlow", KEY_UNBOUND, Category.MOVEMENT, "Disables Stuff From Slowing You Down",
@@ -114,12 +120,7 @@ public class NoSlow extends Module {
 	@Subscribe
 	public void onTick(EventTick event) {
 		/* Inventory */
-		if (getSetting(6).asToggle().state && mc.currentScreen != null
-				&& !(mc.currentScreen instanceof ChatScreen)
-				&& !(mc.currentScreen instanceof BookScreen)
-				&& !(mc.currentScreen instanceof SignEditScreen)
-				&& !(mc.currentScreen instanceof CreativeInventoryScreen
-						&& ((CreativeInventoryScreen) mc.currentScreen).getSelectedTab() == ItemGroup.SEARCH.getIndex())) {
+		if (getSetting(6).asToggle().state && shouldInvMove(mc.currentScreen)) {
 
 			for (KeyBinding k : new KeyBinding[] { mc.options.keyForward, mc.options.keyBack,
 					mc.options.keyLeft, mc.options.keyRight, mc.options.keyJump, mc.options.keySprint }) {
@@ -132,40 +133,56 @@ public class NoSlow extends Module {
 						InputUtil.fromTranslationKey(mc.options.keySneak.getBoundKeyTranslationKey()).getCode()));
 			}
 
-			if (getSetting(6).asToggle().asToggle().getChild(2).asToggle().state) {
-				float yaw = 0f;
-				float pitch = 0f;
 
-				if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT))
-					yaw -= 4f;
-				if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT))
-					yaw += 4f;
-				if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_UP))
-					pitch -= 4f;
-				if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_DOWN))
-					pitch += 4f;
+		}
+	}
 
-				if (getSetting(6).asToggle().asToggle().getChild(2).asToggle().asToggle().getChild(1).asToggle().state) {
-					if (yaw == 0f && pitch != 0f) {
-						yaw += -0.1 + Math.random() / 5f;
-					} else {
-						yaw *= 0.75f + Math.random() / 2f;
-					}
 
-					if (pitch == 0f && yaw != 0f) {
-						pitch += -0.1 + Math.random() / 5f;
-					} else {
-						pitch *= 0.75f + Math.random() / 2f;
-					}
-				}
+	@Subscribe
+	public void onRender(EventWorldRender.Post event) {
+		/* Inventory */
+		if (getSetting(6).asToggle().state
+				&& getSetting(6).asToggle().asToggle().getChild(2).asToggle().state
+				&& shouldInvMove(mc.currentScreen)) {
 
-				mc.player.yaw += yaw;
+			float yaw = 0f;
+			float pitch = 0f;
 
-				if (getSetting(6).asToggle().asToggle().getChild(2).asToggle().asToggle().getChild(0).asToggle().state) {
-					mc.player.pitch = MathHelper.clamp(mc.player.pitch + pitch, -90f, 90f);
+			mc.keyboard.setRepeatEvents(true);
+
+			float amount = (System.currentTimeMillis() - lastTime) / 10f;
+			lastTime = System.currentTimeMillis();
+
+			if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT))
+				yaw -= amount;
+			if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT))
+				yaw += amount;
+			if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_UP))
+				pitch -= amount;
+			if (InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_DOWN))
+				pitch += amount;
+
+			if (getSetting(6).asToggle().asToggle().getChild(2).asToggle().asToggle().getChild(1).asToggle().state) {
+				if (yaw == 0f && pitch != 0f) {
+					yaw += -0.1 + Math.random() / 5f;
 				} else {
-					mc.player.pitch += pitch;
+					yaw *= 0.75f + Math.random() / 2f;
 				}
+
+				if (pitch == 0f && yaw != 0f) {
+					pitch += -0.1 + Math.random() / 5f;
+				} else {
+					pitch *= 0.75f + Math.random() / 2f;
+				}
+			}
+
+
+			mc.player.yaw += yaw;
+
+			if (getSetting(6).asToggle().asToggle().getChild(2).asToggle().asToggle().getChild(0).asToggle().state) {
+				mc.player.pitch = MathHelper.clamp(mc.player.pitch + pitch, -90f, 90f);
+			} else {
+				mc.player.pitch += pitch;
 			}
 		}
 	}
@@ -175,5 +192,20 @@ public class NoSlow extends Module {
 		if (event.getPacket() instanceof ClickSlotC2SPacket && getSetting(6).asToggle().asToggle().getChild(1).asToggle().state) {
 			mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, Mode.STOP_SPRINTING));
 		}
+	}
+
+	private boolean shouldInvMove(Screen screen) {
+		if (screen == null) {
+			return false;
+		}
+
+		return !(screen instanceof ChatScreen
+				|| screen instanceof BookScreen
+				|| screen instanceof SignEditScreen
+				|| screen instanceof JigsawBlockScreen
+				|| screen instanceof StructureBlockScreen
+				|| screen instanceof AnvilScreen
+				|| (screen instanceof CreativeInventoryScreen
+						&& ((CreativeInventoryScreen) screen).getSelectedTab() == ItemGroup.SEARCH.getIndex()));
 	}
 }

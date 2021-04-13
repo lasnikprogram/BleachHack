@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -145,7 +145,7 @@ public class Nuker extends Module {
 
 	public Pair<Vec3d, Direction> getBlockAngle(BlockPos pos) {
 		for (Direction d: Direction.values()) {
-			if (!mc.world.getBlockState(pos.method_35851(d)).isFullCube(mc.world, pos)) {
+			if (!mc.world.getBlockState(pos.offset(d)).isFullCube(mc.world, pos)) {
 				Vec3d vec = WorldUtils.getLegitLookPos(pos, d, true, 5);
 
 				if (vec != null) {

@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -113,13 +113,11 @@ public class UI extends Module {
 				lines.sort((a, b) -> Integer.compare(mc.textRenderer.getWidth(b), mc.textRenderer.getWidth(a)));
 			}
 
-			// new colors
-			int color = getRainbowFromSettings(0);
 			int extra = getSetting(0).asToggle().getChild(0).asToggle().state ? 1 : 0;
 			boolean outer = getSetting(0).asToggle().getChild(1).asToggle().state;
 			boolean fill = getSetting(0).asToggle().getChild(2).asToggle().state;
 			for (String s : lines) {
-				color = getRainbowFromSettings(arrayCount);
+				int color = getRainbowFromSettings(arrayCount * 40);
 
 				if (fill) {
 					DrawableHelper.fill(event.matrix, 0, arrayCount * 10, mc.textRenderer.getWidth(s) + 3 + extra, 10 + (arrayCount * 10), 0x70003030);
@@ -144,7 +142,10 @@ public class UI extends Module {
 			}
 
 			if (outer && !lines.isEmpty()) {
-				DrawableHelper.fill(event.matrix, 0, (arrayCount * 10), mc.textRenderer.getWidth(lines.get(arrayCount - 1)) + 4 + extra, 1 + (arrayCount * 10), color);
+				DrawableHelper.fill(event.matrix,
+						0, (arrayCount * 10),
+						mc.textRenderer.getWidth(lines.get(arrayCount - 1)) + 4 + extra, 1 + (arrayCount * 10),
+						getRainbowFromSettings(arrayCount * 40));
 			}
 		}
 
@@ -343,12 +344,15 @@ public class UI extends Module {
 	}
 
 	public static int getRainbowFromSettings(int offset) {
-		Module ui = ModuleManager.getModule(UI.class);
+		// What the fuck
+		// shhh
+		Module ui = ModuleManager.getModule("UI");
 
 		if (ui == null)
 			return getRainbow(0.5f, 0.5f, 10, 0);
 
-		return getRainbow((float) ui.getSetting(0).asToggle().getChild(5).asSlider().getValue(),
+		return getRainbow(
+				(float) ui.getSetting(0).asToggle().getChild(5).asSlider().getValue(),
 				(float) ui.getSetting(0).asToggle().getChild(4).asSlider().getValue(),
 				ui.getSetting(0).asToggle().getChild(6).asSlider().getValue(),
 				offset);

@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ public class MixinBlock {
 
 	@Inject(method = "shouldDrawSide", at = @At("HEAD"), cancellable = true)
 	private static void shouldDrawSide(BlockState state, BlockView world, BlockPos pos, Direction side, BlockPos blockPos, CallbackInfoReturnable<Boolean> callback) {
-		Xray xray = ModuleManager.getModule(Xray.class);
+		Xray xray = (Xray) ModuleManager.getModule("Xray");
 		if (xray.isEnabled()) {
 			callback.setReturnValue(xray.isVisible(state.getBlock()));
 			callback.cancel();
@@ -45,7 +45,7 @@ public class MixinBlock {
 
 	@Inject(method = "isShapeFullCube", at = @At("HEAD"), cancellable = true)
 	private static void isShapeFullCube(VoxelShape shape, CallbackInfoReturnable<Boolean> callback) {
-		if (ModuleManager.getModule(Xray.class).isEnabled()) {
+		if (ModuleManager.getModule("Xray").isEnabled()) {
 			callback.setReturnValue(false);
 		}
 	}
@@ -53,7 +53,7 @@ public class MixinBlock {
 	/*@Inject(method = "getRenderType", at = @At("HEAD"), cancellable = true)
 	public void getRenderType(CallbackInfoReturnable<BlockRenderType> callback) {
 		try {
-			if (ModuleManager.getModule(Xray.class).isToggled()) {
+			if (ModuleManager.getModuleByClass(Xray.class).isToggled()) {
 				callback.setReturnValue(BlockRenderType.INVISIBLE); callback.cancel();
 			}
 		} catch (Exception ignored) {

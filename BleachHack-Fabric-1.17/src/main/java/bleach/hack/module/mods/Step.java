@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -65,7 +65,7 @@ public class Step extends Module {
 			}
 		}
 		
-		if (!mc.world.getBlockState(mc.player.getBlockPos().method_35849(0, mc.player.getHeight() + 1, 0)).getMaterial().isReplaceable()
+		if (!mc.world.getBlockState(mc.player.getBlockPos().add(0, mc.player.getHeight() + 1, 0)).getMaterial().isReplaceable()
 				|| mc.player.input.jumping
 				|| !(mc.player.input.pressingForward || mc.player.input.pressingBack || mc.player.input.pressingLeft || mc.player.input.pressingRight)) {
 			return;

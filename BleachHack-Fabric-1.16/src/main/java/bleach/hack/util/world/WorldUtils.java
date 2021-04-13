@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,8 @@
  */
 package bleach.hack.util.world;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -43,6 +45,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.WorldChunk;
 
 public class WorldUtils {
 
@@ -83,6 +86,24 @@ public class WorldUtils {
 
 	public static final Set<Material> FLUIDS = Sets.newHashSet(
 			Material.WATER, Material.LAVA, Material.UNDERWATER_PLANT, Material.REPLACEABLE_UNDERWATER_PLANT);
+
+	public static List<WorldChunk> getLoadedChunks() {
+		List<WorldChunk> chunks = new ArrayList<>();
+
+		int viewDist = mc.options.viewDistance;
+
+		for (int x = -viewDist; x <= viewDist; x++) {
+			for (int z = -viewDist; z <= viewDist; z++) {
+				WorldChunk chunk = mc.world.getChunkManager().getWorldChunk((int) mc.player.getX() / 16 + x, (int) mc.player.getZ() / 16 + z);
+
+				if (chunk != null) {
+					chunks.add(chunk);
+				}
+			}
+		}
+
+		return chunks;
+	}
 
 	public static boolean isFluid(BlockPos pos) {
 		return FLUIDS.contains(mc.world.getBlockState(pos).getMaterial());
@@ -128,7 +149,7 @@ public class WorldUtils {
 			mc.player.inventory.selectedSlot = slot;
 
 		for (Direction d : Direction.values()) {
-			if ((d == Direction.DOWN && pos.getY() == 0) || (d == Direction.UP && pos.getY() == 255))
+			if (!World.isInBuildLimit(pos.offset(d)))
 				continue;
 
 			Block neighborBlock = mc.world.getBlockState(pos.offset(d)).getBlock();
@@ -190,7 +211,7 @@ public class WorldUtils {
 			mc.player.inventory.selectedSlot = slot;
 
 		for (Direction d : Direction.values()) {
-			if ((d == Direction.DOWN && pos.getY() == 0) || (d == Direction.UP && pos.getY() == 255))
+			if (!World.isInBuildLimit(pos.offset(d)))
 				continue;
 
 			Block neighborBlock = mc.world.getBlockState(pos.offset(d)).getBlock();

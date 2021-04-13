@@ -1,5 +1,5 @@
 /*
- * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
+ * This file is part of the BleachHack distribution (https://github.com/BleachDrinker420/BleachHack/).
  * Copyright (c) 2019 Bleach.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ public class MixinFluidRenderer {
 
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	public void render(BlockRenderView world, BlockPos pos, VertexConsumer vertexConsumer, FluidState state, CallbackInfoReturnable<Boolean> callback) {
-		Xray xray = ModuleManager.getModule(Xray.class);
+		Xray xray = (Xray) ModuleManager.getModule("Xray");
 		if (xray.getSetting(0).asToggle().state)
 			return;
 
@@ -48,7 +48,7 @@ public class MixinFluidRenderer {
 
 	@Inject(method = "isSideCovered", at = @At("HEAD"), cancellable = true)
 	private static void isSideCovered(BlockView world, BlockPos pos, Direction direction, float maxDeviation, CallbackInfoReturnable<Boolean> callbackInfo) {
-		Xray xray = ModuleManager.getModule(Xray.class);
+		Xray xray = (Xray) ModuleManager.getModule("Xray");
 
 		if (!xray.getSetting(0).asToggle().state && xray.isEnabled() && xray.isVisible(world.getBlockState(pos).getBlock())) {
 			callbackInfo.setReturnValue(false);
