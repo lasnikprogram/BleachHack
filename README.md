@@ -1,4 +1,5 @@
 
+# Almost all of the changes from this repo are now in the official BleachHack repo!
 # BleachHack
 ![](https://img.shields.io/github/downloads/bleachdrinker420/BleachHack/total?style=flat-square)
 ![](https://img.shields.io/tokei/lines/github/BleachDrinker420/BleachHack?style=flat-square)
