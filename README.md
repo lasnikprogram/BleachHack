@@ -1,5 +1,3 @@
-
-# Almost all of the changes from this repo are now in the official BleachHack repo!
 # BleachHack
 ![](https://img.shields.io/github/downloads/bleachdrinker420/BleachHack/total?style=flat-square)
 ![](https://img.shields.io/tokei/lines/github/BleachDrinker420/BleachHack?style=flat-square)
@@ -8,9 +6,10 @@
 ![](https://img.shields.io/badge/daily%20commit-yes-blue?style=flat-square)
 ![](https://img.shields.io/discord/620600892718055434?style=flat-square)
 
-Very cool client.
+## Notice by Lasnik:
+I used the fork and it's branches to contribute to the main mod and contributed around 10 - 15. Most of them got merged and further improved in there. So you should definitely use the main repository.  
 
-Works on fabric 1.16 & 1.17 Snapshots (1.14-1.15 is discontinued).
+Works on fabric 1.16 & 1.17 Snapshots (1.14-1.15 is discontinued but further support by the main repo).
 
 > Website: https://bleachhack.github.io/  
 > Discord: https://discord.gg/b5Wc4nQ
